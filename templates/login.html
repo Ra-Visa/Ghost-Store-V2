@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card mt-5" style="border: 3px solid #00ff00;">
+                <div class="card-header text-center" style="background-color: rgba(0, 255, 0, 0.1); border-bottom: 2px solid #00ff00;">
+                    <h3 class="mb-0" style="color: #00ff00;">
+                        <i class="bi bi-shield-lock"></i> Admin Login
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person"></i> Username
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="Enter username" required autofocus>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-key"></i> Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Enter password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-2">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-center" style="background-color: rgba(0, 255, 0, 0.05); border-top: 1px solid #00ff00;">
+                    <small style="color: #00ff00;">Ghost Store Admin Panel</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

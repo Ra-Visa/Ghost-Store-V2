@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card" style="border: 3px solid #00ff00;">
+                <div class="card-header" style="background-color: rgba(0, 255, 0, 0.1); border-bottom: 2px solid #00ff00;">
+                    <h4 class="mb-0" style="color: #00ff00;">
+                        {% if product %}
+                            <i class="bi bi-pencil-square"></i> Edit Product: {{ product.name }}
+                        {% else %}
+                            <i class="bi bi-plus-circle"></i> Add New Product
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                <i class="bi bi-tag"></i> Product Name
+                            </label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="{{ product.name if product else 'NETFLIX' }}" 
+                                   placeholder="Enter product name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="price" class="form-label">
+                                <i class="bi bi-currency-dollar"></i> Price ($)
+                            </label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" 
+                                   value="{{ product.price if product else '0.10' }}" 
+                                   placeholder="0.00" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="image_url" class="form-label">
+                                <i class="bi bi-image"></i> Image URL
+                            </label>
+                            <input type="url" class="form-control" id="image_url" name="image_url" 
+                                   value="{{ product.image_url if product else 'https://i.ibb.co/CsXf3S0C/Chat-GPT-Image-Mar-11-2026-03-42-51-PM.png' }}" 
+                                   placeholder="https://..." required>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="text_color" class="form-label">
+                                    <i class="bi bi-palette"></i> Text Color
+                                </label>
+                                <input type="color" class="form-control form-control-color" id="text_color" name="text_color" 
+                                       value="{{ product.text_color if product else '#ffffff' }}" 
+                                       title="Choose text color" style="height: 50px;">
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="price_color" class="form-label">
+                                    <i class="bi bi-palette"></i> Price Color
+                                </label>
+                                <input type="color" class="form-control form-control-color" id="price_color" name="price_color" 
+                                       value="{{ product.price_color if product else '#00ff00' }}" 
+                                       title="Choose price color" style="height: 50px;">
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="card_bg_color" class="form-label">
+                                    <i class="bi bi-palette"></i> Card Background
+                                </label>
+                                <input type="color" class="form-control form-control-color" id="card_bg_color" name="card_bg_color" 
+                                       value="{{ product.card_bg_color if product else '#1a1d20' }}" 
+                                       title="Choose card background" style="height: 50px;">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="bi bi-text-paragraph"></i> Description
+                            </label>
+                            <textarea class="form-control" id="description" name="description" 
+                                      rows="3" placeholder="Enter product description" required>{{ product.description if product else 'NETFLIX COOKIE - Login Cookie in Chrome or Firefox' }}</textarea>
+                        </div>
+                        
+                        <!-- Live Preview Section -->
+                        <div class="card mb-4" style="background-color: #000; border: 2px solid #00ff00;">
+                            <div class="card-header" style="background-color: rgba(0, 255, 0, 0.1); border-bottom: 1px solid #00ff00;">
+                                <h5 class="mb-0" style="color: #00ff00;">
+                                    <i class="bi bi-eye"></i> Live Preview
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="card" id="previewCard" style="background-color: {% if product %}{{ product.card_bg_color }}{% else %}#1a1d20{% endif %}; border: 2px solid #00ff00;">
+                                            <div class="card-header text-center" style="background-color: rgba(0, 255, 0, 0.1);">
+                                                <img src="https://i.ibb.co/CsXf3S0C/Chat-GPT-Image-Mar-11-2026-03-42-51-PM.png" style="height: 50px; width: auto;">
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title" id="previewTitle" style="color: {% if product %}{{ product.text_color }}{% else %}#ffffff{% endif %};">
+                                                    {% if product %}{{ product.name }}{% else %}NETFLIX{% endif %}
+                                                </h5>
+                                                <h6 class="card-subtitle mb-2" style="color: #ff0000;">NETFLIX COOKIE</h6>
+                                                <p class="card-text small" id="previewDesc" style="color: #cccccc;">
+                                                    {% if product %}{{ product.description[:50] }}{% else %}NETFLIX COOKIE - Login Cookie...{% endif %}
+                                                </p>
+                                                <h3 class="mb-2" id="previewPrice" style="color: {% if product %}{{ product.price_color }}{% else %}#00ff00{% endif %}; font-weight: bold;">
+                                                    ${{ "%.2f"|format(product.price if product else 0.10) }}
+                                                </h3>
+                                                <button class="btn btn-success btn-sm w-100" disabled>
+                                                    <i class="bi bi-cart"></i> ទិញឥឡូវនេះ
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/admin" class="btn btn-outline-success me-md-2">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                {% if product %}
+                                    <i class="bi bi-check-circle"></i> Update Product
+                                {% else %}
+                                    <i class="bi bi-plus-circle"></i> Add Product
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Live preview update
+document.getElementById('name').addEventListener('input', function() {
+    document.getElementById('previewTitle').textContent = this.value || 'NETFLIX';
+});
+
+document.getElementById('description').addEventListener('input', function() {
+    let desc = this.value || 'NETFLIX COOKIE';
+    document.getElementById('previewDesc').textContent = desc.substring(0, 50) + (desc.length > 50 ? '...' : '');
+});
+
+document.getElementById('price').addEventListener('input', function() {
+    let price = parseFloat(this.value) || 0;
+    document.getElementById('previewPrice').textContent = '$' + price.toFixed(2);
+});
+
+document.getElementById('text_color').addEventListener('input', function() {
+    document.getElementById('previewTitle').style.color = this.value;
+});
+
+document.getElementById('price_color').addEventListener('input', function() {
+    document.getElementById('previewPrice').style.color = this.value;
+});
+
+document.getElementById('card_bg_color').addEventListener('input', function() {
+    document.getElementById('previewCard').style.backgroundColor = this.value;
+});
+
+document.getElementById('image_url').addEventListener('input', function() {
+    // Optional: Update preview image if needed
+    console.log('Image URL updated:', this.value);
+});
+</script>
+{% endblock %}

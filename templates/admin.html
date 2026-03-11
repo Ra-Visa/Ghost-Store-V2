@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-speedometer2"></i> Admin Dashboard
+        </h2>
+        <a href="/admin/add" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Add New Product
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card" style="border: 2px solid #00ff00;">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Colors</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td><span class="badge">#{{ product.id }}</span></td>
+                            <td>
+                                <img src="{{ product.image_url }}" alt="{{ product.name }}" 
+                                     style="width: 50px; height: 50px; object-fit: contain; background-color: #000; border-radius: 5px; padding: 5px;">
+                            </td>
+                            <td style="color: {{ product.text_color }}; font-weight: bold;">{{ product.name }}</td>
+                            <td>
+                                <span style="color: {{ product.price_color }}; font-weight: bold; font-size: 1.1rem;">
+                                    ${{ "%.2f"|format(product.price) }}
+                                </span>
+                            </td>
+                            <td>{{ product.description[:30] }}...</td>
+                            <td>
+                                <div style="display: flex; gap: 5px;">
+                                    <div style="width: 25px; height: 25px; background-color: {{ product.text_color }}; border: 2px solid #fff; border-radius: 5px;" 
+                                         title="Text Color: {{ product.text_color }}"></div>
+                                    <div style="width: 25px; height: 25px; background-color: {{ product.price_color }}; border: 2px solid #fff; border-radius: 5px;" 
+                                         title="Price Color: {{ product.price_color }}"></div>
+                                    <div style="width: 25px; height: 25px; background-color: {{ product.card_bg_color }}; border: 2px solid #fff; border-radius: 5px;" 
+                                         title="Card BG: {{ product.card_bg_color }}"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="/admin/edit/{{ product.id }}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <a href="/admin/delete/{{ product.id }}" class="btn btn-sm btn-danger" 
+                                       onclick="return confirm('Are you sure you want to delete this product?')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-3 text-end">
+        <small style="color: #00ff00;">Total Products: {{ products|length }}</small>
+    </div>
+</div>
+{% endblock %}
